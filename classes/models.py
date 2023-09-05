@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from users.models import NULLABLE
@@ -22,6 +23,7 @@ class Lesson(models.Model):
     description = models.TextField(max_length=5000, verbose_name='description')
     preview = models.ImageField(upload_to='images/lessons/', verbose_name='preview', **NULLABLE)
     video_url = models.URLField(max_length=400, verbose_name='video_url')
+    course = models.ManyToManyField('Course')
 
     def __str__(self):
         return f'Lesson({self.title})'
@@ -32,5 +34,24 @@ class Lesson(models.Model):
         ordering = ('title',)
 
 
+class Payment(models.Model):
+    CASH = 'Cash'
+    TRANSFER_TO_ACCOUNT = 'Transfer to account'
+    PAYMENT_CHOICES = [
+        (CASH, 'Cash'),
+        (TRANSFER_TO_ACCOUNT, 'Transfer to account')
+    ]
 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='user')
+    date_of_payment = models.DateTimeField(verbose_name='date of payment')
+    course_paid = models.ForeignKey(Course, verbose_name='course paid', on_delete=models.CASCADE)
+    payment_amount = models.PositiveIntegerField(verbose_name='payment amount')
+    type_of_payment = models.CharField(max_length=100, choices=PAYMENT_CHOICES, verbose_name='type of payment')
 
+    def __str__(self):
+        return f'Payment({self.type_of_payment})'
+
+    class Meta:
+        verbose_name = 'payment'
+        verbose_name_plural = 'payments'
+        ordering = ('user',)
