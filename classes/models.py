@@ -5,6 +5,7 @@ from users.models import NULLABLE
 
 
 class Course(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='user')
     title = models.CharField(max_length=250, verbose_name='title')
     description = models.TextField(max_length=5000, verbose_name='description')
     preview = models.ImageField(upload_to='images/courses/', verbose_name='preview', **NULLABLE)
@@ -19,6 +20,7 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='user')
     title = models.CharField(max_length=250, verbose_name='title')
     description = models.TextField(max_length=5000, verbose_name='description')
     preview = models.ImageField(upload_to='images/lessons/', verbose_name='preview', **NULLABLE)

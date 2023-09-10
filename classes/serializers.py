@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from classes.models import Course, Lesson, Payment
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -19,10 +20,8 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ['title', 'description', 'preview', 'lessons_count']
 
 
-
-
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
+
