@@ -46,7 +46,7 @@ class Payment(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='user')
     date_of_payment = models.DateTimeField(verbose_name='date of payment')
-    course_paid = models.ForeignKey(Course, verbose_name='course paid', on_delete=models.CASCADE)
+    course_paid = models.ForeignKey(Course, verbose_name='course paid', on_delete=models.CASCADE, **NULLABLE)
     payment_amount = models.PositiveIntegerField(verbose_name='payment amount')
     type_of_payment = models.CharField(max_length=100, choices=PAYMENT_CHOICES, verbose_name='type of payment')
 
@@ -57,3 +57,17 @@ class Payment(models.Model):
         verbose_name = 'payment'
         verbose_name_plural = 'payments'
         ordering = ('user',)
+
+
+class Subscription(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='course')
+    is_active = models.BooleanField(default=False, verbose_name='is active')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='user')
+
+    def __str__(self):
+        return f'Subscription({self.is_active})'
+
+    class Meta:
+        verbose_name = 'subscription'
+        verbose_name_plural = 'subscriptions'
+        ordering = ('course',)
