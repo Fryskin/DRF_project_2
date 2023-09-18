@@ -1,3 +1,5 @@
+import webbrowser
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
@@ -83,25 +85,10 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
         new_subscription = serializer.save()
         new_subscription.save()
 
-        stripe.api_key = "sk_test_51NrK4fC6CMlyHByPNz3BIrLoBUdUNQTP6smWQNord9uOdkMfP65XhGxa7q3aYxCgxZaVVYR9lB9fnhZyz844BYYD00QKY1sR8K"
-
-        stripe.Price.create(
-            unit_amount=120,
-            currency="usd",
-            recurring={"interval": "month"},
-            product="prod_OUtWghl8cgKm7R",
-        )
-
-        stripe.checkout.Session.create(
-            success_url="https://example.com/success",
-            line_items=[
-                {
-                    "price": "price_H5ggYwtDq4fbrJ",
-                    "quantity": 2,
-                },
-            ],
-            mode="subscription",
-        )
+        webbrowser.open('https://checkout.stripe.com/c/pay/cs_test_a1yIDHj78YjSES9r5m9qynuwy27b6Lnzi8HFtXWCLYaP21Nhm'
+                        'F85A5ZdIc#fidkdWxOYHwnPyd1blpxYHZxWjA0S3dOMWNGM0ZIaXxNR3xVV3NRPGhSMjxAVWRkfGw2Xz1sXVREZ000N'
+                        '219SWwxfHcxckxsXXVQbGdrbWhjVHJ9QjFwUXxmalBka042R3Vic1MxbVNPVHN8NTVUcUZXQDJ0YCcpJ2N3amhWYHdz'
+                        'YHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl', new=1)
 
 
 class SubscriptionRetrieveAPIView(generics.RetrieveAPIView):
