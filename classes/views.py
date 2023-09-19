@@ -1,5 +1,6 @@
 import webbrowser
 
+from django.core.mail import send_mail
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.filters import OrderingFilter
@@ -9,6 +10,8 @@ from classes.permissions import IsStaff, IsOwner
 from classes.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
 from rest_framework.response import Response
 import stripe
+
+from classes.tasks import update_of_course_mailing
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -48,6 +51,10 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsStaff, IsOwner]
+
+    def perform_update(self, serializer):
+        mailing = serializer.save()
+        update_of_course_mailing.delay('User')
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):

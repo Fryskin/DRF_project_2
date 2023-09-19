@@ -50,13 +50,16 @@ INSTALLED_APPS = [
 
     'classes.apps.ClassesConfig',
     'users.apps.UsersConfig',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -116,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -168,3 +170,40 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+
+CACHE_ENABLED = True
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379",
+            "TIMEOUT": 300
+        }
+    }
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379'    # Например, Redis, который по умолчанию работает на порту 6379
+
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+
+CELERY_TIMEZONE = "Australia/Tasmania"
+
+CELERY_TASK_TRACK_STARTED = True
+
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'fuckup@oscarbot.ru'
+EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
+EMAIL_USE_SSL = True
+
+
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'classes.tasks.drop_out_non_active_student',
+        'schedule': timedelta(minutes=10),
+    },
+}
