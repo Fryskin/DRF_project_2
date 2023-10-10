@@ -93,9 +93,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'drf_project',
+        'NAME': 'pogtgres',
         'USER': 'postgres',
-        'PASSWORD': 'bubacock'
+        'PASSWORD': 'mysecretpassword',
+        'HOST': 'db'
     }
 }
 
@@ -175,20 +176,19 @@ CACHE_ENABLED = True
 if CACHE_ENABLED:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379",
+            "BACKEND": 'django.core.cache.backends.redis.RedisCache',
+            "LOCATION": 'redis://127.0.0.1:6379',
             "TIMEOUT": 300
         }
     }
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379'    # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = 'redis://localhost:6379'
 
 
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 
-
-CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TIMEZONE = 'Australia/Tasmania'
 
 CELERY_TASK_TRACK_STARTED = True
 
