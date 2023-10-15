@@ -17,3 +17,6 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
     depends_on:
       - db
+      -
+    env_file:
+      - .env.dev
