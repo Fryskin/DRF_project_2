@@ -13,10 +13,11 @@ services:
 
     ports:
       - '8000:8000'
+      - '5432:5432'
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     depends_on:
       - db
-      -
+
     env_file:
       - .env.dev

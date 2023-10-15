@@ -96,7 +96,7 @@ DATABASES = {
         'NAME': 'pogtgres',
         'USER': 'postgres',
         'PASSWORD': 'mysecretpassword',
-        'HOST': '127.0.0.1 '
+        'HOST': '127.0.0.1'
     }
 }
 
