@@ -7,9 +7,14 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
       PGDATA: /var/lib/postgresql/data/pgdata
 
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000
 
     ports:
       - '8000:8000'
@@ -19,5 +24,43 @@ services:
     depends_on:
       - db
 
+
     env_file:
-      - .env.dev
+      - .env
+
+  redis:
+    image: redis
+#    command: --name some-redis -d redis
+
+    ports:
+      - '6379:6379'
+
+    expose:
+      - '6379'
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-h", "localhost", "ping" ]
+      interval: 1m
+      timeout: 5s
+
+    depends_on:
+      - app
+      - db
+
+  celery:
+    build: .
+    command: celery -A config worker -l INFO
+
+    volumes:
+      - .:/app
+
+    environment:
+      CELERY_BROKER_URL: 'redis://127.0.0.1:6379/0'
+      CELERY_RESULT_BACKEND: 'redis://127.0.0.1:6379/0'
+
+
+    depends_on:
+      - app
+      - redis
+      - db
+
