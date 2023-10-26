@@ -93,9 +93,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'mysecretpassword',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': 'db'
     }
 }
@@ -177,16 +177,16 @@ if CACHE_ENABLED:
     CACHES = {
         "default": {
             "BACKEND": 'django.core.cache.backends.redis.RedisCache',
-            "LOCATION": 'redis://127.0.0.1:6379',
+            "LOCATION": 'redis://redis:6379',
             "TIMEOUT": 300
         }
     }
 
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 
 CELERY_TIMEZONE = 'Australia/Tasmania'
 
